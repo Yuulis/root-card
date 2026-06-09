@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>平方根小テストジェネレーター</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/print.css">
+</head>
+<body>
+
+  <header class="no-print">
+    <h1>&#x1f4dd; 平方根小テストジェネレーター</h1>
+    <p>中学3年生向け ─ 問題・解答シート印刷ツール</p>
+  </header>
+
+  <section id="settings" class="no-print">
+    <div class="setting-group">
+      <label class="group-label">問題の種類（複数選択可）</label>
+      <div class="checkbox-row">
+        <label><input type="checkbox" name="problem-type" value="integer_sqrt" checked> 整数の平方根</label>
+        <label><input type="checkbox" name="problem-type" value="simplify" checked> 平方根の簡約</label>
+        <label><input type="checkbox" name="problem-type" value="add_sub" checked> 加法・減法</label>
+        <label><input type="checkbox" name="problem-type" value="expand" checked> 展開公式の利用</label>
+      </div>
+    </div>
+
+    <div class="setting-group">
+      <div class="inline-fields">
+        <label>
+          1シートあたりの問題数:
+          <select id="problems-per-sheet">
+            <option value="8" selected>8問 (4行×2列)</option>
+            <option value="12">12問 (6行×2列)</option>
+            <option value="16">16問 (8行×2列)</option>
+            <option value="20">20問 (10行×2列)</option>
+            <option value="24">24問 (12行×2列)</option>
+          </select>
+        </label>
+        <label>
+          合計問題数:
+          <input type="number" id="total-cards" value="32" min="1" max="200">
+        </label>
+      </div>
+    </div>
+
+    <div class="setting-group">
+      <label class="group-label">印刷モード</label>
+      <div class="radio-row">
+        <label><input type="radio" name="print-mode" value="both" checked> 問題＋解答（両方）</label>
+        <label><input type="radio" name="print-mode" value="question"> 問題のみ（解答欄は空白）</label>
+        <label><input type="radio" name="print-mode" value="answer"> 答えのみ（問題欄は空白）</label>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button id="btn-generate" class="btn btn-primary" type="button">シートを生成する</button>
+      <button id="btn-print" class="btn btn-secondary" type="button" disabled>印刷する</button>
+    </div>
+  </section>
+
+  <section id="guide" class="no-print">
+    <h2>使い方</h2>
+    <ol>
+      <li>問題の種類・問題数・印刷モードを設定して「シートを生成する」をクリック</li>
+      <li>プレビューで内容を確認（印刷モードを切り替えると表示が変わります）</li>
+      <li>「印刷する」をクリック（または Ctrl+P）</li>
+      <li>「問題のみ」で印刷したシートを生徒に配布し、「答えのみ」で印刷したシートを答え合わせに使用</li>
+    </ol>
+  </section>
+
+  <div id="preview" class="no-print"></div>
+
+  <div id="print-area"></div>
+
+  <script src="js/problems.js"></script>
+  <script src="js/renderer.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,160 @@
+@page {
+  size: A4 portrait;
+  margin: 12mm;
+}
+
+@media print {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    padding: 0;
+    background: #fff;
+    color: #000;
+    font-family:
+      "UD Digi Kyokasho NP-B",
+      "UD Digi Kyokasho N-B",
+      "UD Digi Kyokasho NK-B",
+      "BIZ UDPGothic",
+      "Meiryo",
+      sans-serif;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .no-print,
+  header,
+  #settings,
+  #guide,
+  #preview {
+    display: none !important;
+  }
+
+  #print-area {
+    display: block !important;
+  }
+
+  /* Sheet: one page */
+
+  .quiz-sheet {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 6mm;
+    width: 100%;
+    height: calc(297mm - 24mm);
+    page-break-after: always;
+    break-after: page;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  .quiz-sheet:last-child {
+    page-break-after: auto;
+    break-after: auto;
+  }
+
+  /* Column: CSS Subgrid for perfect border alignment */
+
+  .quiz-column {
+    display: grid;
+    grid-template-columns: 1.6em 1fr 1fr;
+    grid-auto-rows: 1fr;
+    border: 1px solid #999;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .column-header,
+  .problem-row {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: subgrid;
+  }
+
+  .column-header {
+    background: #e8e8e8;
+    font-weight: 700;
+    font-size: 7pt;
+    border-bottom: 1.5pt solid #888;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    grid-auto-rows: auto;
+  }
+
+  .column-header > div {
+    padding: 0.8mm 1.5mm;
+  }
+
+  .problem-row {
+    border-bottom: 0.5pt solid #ddd;
+    min-height: 0;
+  }
+
+  .problem-row:last-child {
+    border-bottom: none;
+  }
+
+  .col-num,
+  .problem-num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-right: 0.5pt solid #bbb;
+    font-size: 7pt;
+    color: #888;
+  }
+
+  .col-q,
+  .col-a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.8mm 1.5mm;
+  }
+
+  .col-q {
+    border-right: 0.5pt solid #bbb;
+  }
+
+  .problem-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5mm 1.5mm;
+    text-align: center;
+  }
+
+  .problem-q {
+    border-right: 0.5pt solid #ddd;
+  }
+
+  /* Font size by problems per sheet */
+  .quiz-sheet[data-problems-per-sheet="8"]  .problem-cell { font-size: 18pt; }
+  .quiz-sheet[data-problems-per-sheet="12"] .problem-cell { font-size: 15pt; }
+  .quiz-sheet[data-problems-per-sheet="16"] .problem-cell { font-size: 13pt; }
+  .quiz-sheet[data-problems-per-sheet="20"] .problem-cell { font-size: 11pt; }
+  .quiz-sheet[data-problems-per-sheet="24"] .problem-cell { font-size: 9pt; }
+
+  /* Answer column: always red when visible */
+  .problem-a {
+    color: #cc0000;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Print mode: question only — hide answer column */
+  body.print-question .problem-a,
+  body.print-question .col-a {
+    visibility: hidden;
+  }
+
+  /* Print mode: answer only — hide question column */
+  body.print-answer .problem-q,
+  body.print-answer .col-q {
+    visibility: hidden;
+  }
+}
