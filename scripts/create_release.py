@@ -1,14 +1,14 @@
-"""Automate creating a versioned release branch with a single-file HTML build."""
+"""Automate creating and pushing a release branch.
+
+The branch push triggers GitHub Actions to build and create a release.
+"""
 
 import re
 import subprocess
 import sys
-from pathlib import Path
 
 VERSION_PATTERN = r"^v\d+\.\d+\.\d+$"
 REQUIRED_BRANCH = "master"
-BUILD_SCRIPT = "scripts/build.py"
-DIST_FILE = "dist/index.html"
 
 
 def print_error(message: str) -> None:
@@ -44,7 +44,7 @@ def is_working_tree_clean() -> bool:
 
 
 def create_release(version: str) -> None:
-    """Create a release branch with a single-file HTML build."""
+    """Create a release branch and push it to trigger GitHub Actions."""
     # Validate version format
     if not validate_version(version):
         print_error(
@@ -71,33 +71,14 @@ def create_release(version: str) -> None:
         sys.exit(1)
 
     branch_name = f"release/{version}"
-    commit_message = f"Release {version} — single-file HTML build"
 
     # Create release branch from current HEAD
     print(f"Creating branch '{branch_name}'...")
     run_git("checkout", "-b", branch_name)
 
-    # Run the build script
-    print("Running build script...")
-    subprocess.run(
-        [sys.executable, BUILD_SCRIPT],
-        check=True,
-    )
-
-    # Verify build output exists
-    if not Path(DIST_FILE).exists():
-        print_error(f"Build did not produce expected output: {DIST_FILE}")
-        run_git("checkout", REQUIRED_BRANCH)
-        run_git("branch", "-D", branch_name)
-        sys.exit(1)
-
-    # Force-add the gitignored dist file
-    print(f"Staging '{DIST_FILE}'...")
-    run_git("add", "-f", DIST_FILE)
-
-    # Commit
-    print("Committing...")
-    run_git("commit", "-m", commit_message)
+    # Push the branch to origin
+    print(f"Pushing '{branch_name}' to origin...")
+    run_git("push", "-u", "origin", branch_name)
 
     # Return to master
     print(f"Returning to '{REQUIRED_BRANCH}' branch...")
@@ -105,12 +86,8 @@ def create_release(version: str) -> None:
 
     # Success message
     print()
-    print(f"Release branch '{branch_name}' created successfully!")
-    print()
-    print("Next steps:")
-    print(f"  1. Review the branch:  git log {branch_name} --oneline")
-    print(f"  2. Push the branch:    git push origin {branch_name}")
-    print(f"  3. Create a tag:       git tag {version} {branch_name}")
+    print(f"Release branch '{branch_name}' has been pushed to origin.")
+    print("GitHub Actions will build and create the release automatically.")
 
 
 def main() -> None:
